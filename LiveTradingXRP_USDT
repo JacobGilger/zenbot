@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>binanceus.XRP-USDT - zenbot 4.1.0 sim result</title>
+  <style type="text/css">
+html {
+  height: 100%;
+}
+
+body {
+  font: 10px sans-serif;
+  background-color: #1f2d35;
+  color: #888;
+  position: relative;
+}
+
+svg {
+    margin: 50px 0 0 0;
+    width: 100%;
+    height: auto;
+    z-index: 2;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #444;
+    shape-rendering: crispEdges;
+}
+
+.axis.x path {
+    stroke: none;
+}
+
+text {
+    fill: #888;
+}
+
+text.symbol {
+    fill: #BBBBBB;
+}
+
+path {
+    fill: none;
+    stroke-width: 1;
+}
+
+path.candle {
+    stroke: #888;
+}
+
+path.candle.up {
+    stroke: rgb(85, 255, 14);
+}
+
+path.candle.down {
+    fill: rgb(232, 87, 35);
+    stroke: #944329;
+}
+
+.close.annotation.up path {
+    stroke: #8ff;
+    stroke-width: 1;
+    fill: #8ff;
+}
+
+.close.annotation.up text {
+    fill: #000;
+}
+
+path.volume {
+    fill: #588bbd;
+}
+
+.indicator-plot path.line {
+    fill: none;
+    stroke-width: 1;
+}
+
+.ma-0 path.line {
+    stroke: #1f77b4;
+}
+
+.ma-1 path.line {
+    stroke: #aec7e8;
+}
+
+.ma-2 path.line {
+    stroke: #ff7f0e;
+}
+
+button {
+    position: absolute;
+    right: 110px;
+    top: 25px;
+}
+
+path.macd {
+    stroke: #a0f;
+}
+
+path.signal {
+    stroke: #0f0;
+}
+
+path.difference {
+    fill: #35474c;
+}
+
+path.rsi {
+    stroke: #09d;
+}
+
+path.overbought {
+    stroke: #9f9;
+    stroke-dasharray: 1, 5;
+}
+
+path.oversold {
+    stroke: #f99;
+    stroke-dasharray: 1, 5;
+}
+
+path.middle, path.zero {
+    stroke: #888;
+    stroke-opacity: 0.5;
+    stroke-dasharray: 1, 5;
+}
+
+.analysis path, .analysis circle {
+    stroke: blue;
+    stroke-width: 0.8;
+}
+
+.trendline circle {
+    stroke-width: 0;
+    display: none;
+}
+
+.mouseover .trendline path {
+    stroke-width: 1.2;
+}
+
+.mouseover .trendline circle {
+    stroke-width: 1;
+    display: inline;
+}
+
+.dragging .trendline path, .dragging .trendline circle {
+    stroke: darkblue;
+}
+
+.interaction path, .interaction circle {
+    pointer-events: all;
+}
+
+.interaction .body {
+    cursor: move;
+}
+
+.trendlines .interaction .start, .trendlines .interaction .end {
+    cursor: nwse-resize;
+}
+
+.supstance path {
+    stroke-dasharray: 2, 2;
+}
+
+.supstances .interaction path {
+    pointer-events: all;
+    cursor: ns-resize;
+}
+
+.mouseover .supstance path {
+    stroke-width: 1.5;
+}
+
+.dragging .supstance path {
+    stroke: darkblue;
+}
+
+.crosshair {
+    cursor: crosshair;
+}
+
+.crosshair path.wire {
+    stroke: #fff;
+    stroke-opacity: 0.5;
+    stroke-dasharray: 1, 5;
+}
+
+.crosshair .axisannotation path {
+    fill: #000;
+    stroke: #fff;
+}
+
+.axisannotation.y path {
+    stroke: #fff;
+}
+
+.tradearrow path.tradearrow {
+    stroke: black;
+}
+
+.tradearrow path.buy {
+    fill: #00ff00;
+}
+
+.tradearrow path.sell {
+    fill: #ff0056;
+}
+
+.tradearrow path.highlight {
+    fill: none;
+    stroke-width: 2;
+}
+
+.tradearrow path.highlight.buy {
+    stroke: #0000FF;
+}
+
+.tradearrow path.highlight.sell {
+    stroke: #9900FF;
+}
+
+.loading {
+    width: 50%;
+    height: 50%;
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    text-align: center;
+    font-size: 80px;
+    z-index: 1;
+    color: #888;
+}
+
+.no-data {
+    display: none;
+    color: #888;
+    font-size: 80px;
+    text-align: center;
+} 
+
+.options {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 3;
+}
+
+.footer {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    color: #aac;
+    font-size: 1.2em;
+}
+
+.footer a {
+    color: cyan;
+    text-decoration: none;
+}
+pre {
+    font-size: 2em;
+}
+  </style>
+</head>
+<body>
+  <div class="ticker-graph"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/techan@0.8.0/dist/techan.min.js"></script>
+  <script>
+var withData = function (data, trades) {
+  var dim = {
+      width: 1280, height: 520,
+      margin: { top: 20, right: 50, bottom: 20, left: 50 },
+      ohlc: { height: 450 }
+  };
+  dim.plot = {
+      width: dim.width - dim.margin.left - dim.margin.right,
+      height: dim.height - dim.margin.top - dim.margin.bottom
+  };
+
+  var yInit, yPercentInit, zoomableInit;
+
+  var x = techan.scale.financetime()
+          .range([0, dim.plot.width]);
+
+  var y = d3.scaleLinear()
+          .range([dim.ohlc.height, 0]);
+
+  var zoom = d3.zoom()
+          .on("zoom", zoomed);
+
+  var yPercent = y.copy();   // Same as y at this stage, will get a different domain later
+
+  var yVolume = d3.scaleLinear()
+          .range([y(0), y(1)]);
+
+  var candlestick = techan.plot.candlestick()
+          .xScale(x)
+          .yScale(y);
+
+  var tradearrow = techan.plot.tradearrow()
+          .xScale(x)
+          .yScale(y)
+          .y(function(d) {
+              // Display the buy and sell arrows a bit above and below the price, so the price is still visible
+              if(d.type === 'buy') return y(d.price)+5;
+              if(d.type === 'sell') return y(d.price)-5;
+              else return y(d.price);
+          });
+
+  var ema2 = techan.plot.ema()
+    .xScale(x)
+    .yScale(y);
+
+  var volume = techan.plot.volume()
+          .accessor(candlestick.accessor())   // Set the accessor to a ohlc accessor so we get highlighted bars
+          .xScale(x)
+          .yScale(yVolume);
+
+  var xAxis = d3.axisBottom(x);
+
+  var timeAnnotation = techan.plot.axisannotation()
+          .axis(xAxis)
+          .orient('bottom')
+          .format(d3.timeFormat('%c'))
+          .width(140)
+          .translate([0, dim.plot.height]);
+
+  var yAxis = d3.axisRight(y);
+
+  var ohlcAnnotation = techan.plot.axisannotation()
+          .axis(yAxis)
+          .orient('right')
+          .format(d3.format(',.8f'))
+          .translate([x(1), 0]);
+
+  var percentAxis = d3.axisLeft(yPercent)
+          .tickFormat(d3.format('+.1%'));
+
+  var percentAnnotation = techan.plot.axisannotation()
+          .axis(percentAxis)
+          .orient('left');
+
+  var volumeAxis = d3.axisRight(yVolume)
+          .ticks(3)
+          .tickFormat(d3.format(",.3s"));
+
+  var volumeAnnotation = techan.plot.axisannotation()
+          .axis(volumeAxis)
+          .orient("right")
+          .width(35);
+
+  var ohlcCrosshair = techan.plot.crosshair()
+          .xScale(timeAnnotation.axis().scale())
+          .yScale(ohlcAnnotation.axis().scale())
+          .xAnnotation(timeAnnotation)
+          .yAnnotation([ohlcAnnotation, percentAnnotation, volumeAnnotation])
+          .verticalWireRange([0, dim.plot.height]);
+
+  var svg = d3.select("body").append("svg")
+          .attr("viewBox", "0 0 " + dim.width + " " + dim.height)
+          .attr("width", dim.width)
+          .attr("height", dim.height);
+
+  var defs = svg.append("defs");
+
+  defs.append("clipPath")
+          .attr("id", "ohlcClip")
+      .append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", dim.plot.width)
+          .attr("height", dim.ohlc.height);
+
+  svg = svg.append("g")
+          .attr("transform", "translate(" + dim.margin.left + "," + dim.margin.top + ")");
+
+  svg.append('text')
+          .attr("class", "symbol")
+          .attr("x", 50)
+          .text("binanceus.XRP-USDT - zenbot 4.1.0");
+
+  svg.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + (dim.plot.height - 30) + ")");
+
+  var ohlcSelection = svg.append("g")
+          .attr("class", "ohlc")
+          .attr("transform", "translate(0,0)");
+
+  ohlcSelection.append("g")
+          .attr("class", "axis")
+          .attr("transform", "translate(" + x(1) + ",0)")
+      .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", -12)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Price");
+
+  ohlcSelection.append("g")
+          .attr("class", "close annotation up")
+          .attr("font-weight", "900")
+
+  ohlcSelection.append("g")
+          .attr("class", "volume")
+          .attr("clip-path", "url(#ohlcClip)");
+
+  ohlcSelection.append("g")
+          .attr("class", "candlestick")
+          .attr("clip-path", "url(#ohlcClip)");
+
+  ohlcSelection.append("g")
+          .attr("class", "indicator ema ma-2")
+          .attr("clip-path", "url(#ohlcClip)");
+
+  ohlcSelection.append("g")
+          .attr("class", "percent axis");
+
+  ohlcSelection.append("g")
+          .attr("class", "volume axis");
+
+  // Add trendlines and other interactions last to be above zoom pane
+  svg.append('g')
+          .attr("class", "crosshair ohlc");
+
+  svg.append("g")
+          .attr("class", "tradearrow")
+          .attr("clip-path", "url(#ohlcClip)");
+
+  var accessor = candlestick.accessor();
+
+  data = data.map(function (d) {
+    d.date = new Date(d.time)
+    return d
+  })
+  data.sort(function(a, b) { return d3.ascending(accessor.d(a), accessor.d(b)); });
+  trades = trades.map(function (t) {
+    t.date = new Date(t.time)
+    return t
+  })
+  trades.sort(function(a, b) { return d3.ascending(accessor.d(a), accessor.d(b)); });
+
+  $('body').css('backgroundColor', '#1f2d35')
+  x.domain(techan.scale.plot.time(data).domain());
+  y.domain(techan.scale.plot.ohlc(data).domain());
+  yPercent.domain(techan.scale.plot.percent(y, accessor(data[0])).domain());
+  yVolume.domain(techan.scale.plot.volume(data).domain());
+
+  svg.select("g.candlestick").datum(data)
+  var last = data[data.length-1]
+  if (!last) {
+    return
+  }
+  svg.select("g.volume").datum(data)
+  svg.select("g.ema.ma-2").datum(techan.indicator.ema().period(36)(data)).call(ema2);
+  svg.select("g.tradearrow").datum(trades).call(tradearrow);
+
+  // Stash for zooming
+  zoomableInit = x.zoomable().domain([0, data.length]).copy(); // Zoom in a little to hide indicator preroll
+  yInit = y.copy();
+  yPercentInit = yPercent.copy();
+
+  draw();
+
+  function draw() {
+    svg.select("g.x.axis").call(xAxis);
+    svg.select("g.ohlc .axis").call(yAxis);
+    svg.select("g.volume.axis").call(volumeAxis);
+    svg.select("g.percent.axis").call(percentAxis);
+    svg.select("g.candlestick").call(candlestick);
+    svg.select("g.volume").call(volume);
+    svg.select("g.crosshair.ohlc").call(ohlcCrosshair).call(zoom);
+    svg.select("g.tradearrow").call(tradearrow);
+    svg.select("g .ema.ma-2").call(ema2.refresh).call(zoom);
+  }
+
+  function zoomed() {
+    x.zoomable().domain(d3.event.transform.rescaleX(zoomableInit).domain());
+    y.domain(d3.event.transform.rescaleY(yInit).domain());
+    yPercent.domain(d3.event.transform.rescaleY(yPercentInit).domain());
+
+    draw();
+  }
+}
+  </script>
+  <script>
+var data = [{"period_id":"m26781486","size":"1m","time":1606889160000,"open":0.60728,"high":0.60835,"low":0.60728,"close":0.60835,"volume":1098.4,"close_time":1606889219999,"latest_trade_time":1606889198647,"last_try_trade":1606889476669,"rsi_avg_gain":0.0008693763364290723,"rsi_avg_loss":0.0005356615622877501,"rsi":61.88,"id":"b21879c0","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"b21879c0","vwap":0.6089341614079669,"ema1":0.6039466416582193,"sma2":0.6094182352941174},{"period_id":"m26781485","size":"1m","time":1606889100000,"open":0.60605,"high":0.6069,"low":0.60605,"close":0.6069,"volume":200,"close_time":1606889159999,"latest_trade_time":1606889153279,"last_try_trade":1606889206643,"rsi_avg_gain":0.0008247129776928508,"rsi_avg_loss":0.0005768662978483462,"rsi":58.84,"id":"fbd7840c","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"fbd7840c","vwap":0.6089344525144156,"ema1":0.6037865195367,"sma2":0.6094622875816991},{"period_id":"m26781479","size":"1m","time":1606888740000,"open":0.60576,"high":0.60576,"low":0.60576,"close":0.60576,"volume":673.8,"close_time":1606888799999,"latest_trade_time":1606888778749,"rsi_avg_gain":0.0008004601298230678,"rsi_avg_loss":0.0006212406284520651,"rsi":56.3,"id":"a75695c3","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"a75695c3","last_try_trade":1606889176608,"vwap":0.6089346371329938,"ema1":0.6036733020653073,"sma2":0.6095352941176468},{"period_id":"m26781477","size":"1m","time":1606888620000,"open":0.60532,"high":0.60532,"low":0.60532,"close":0.60532,"volume":519.7,"close_time":1606888679999,"latest_trade_time":1606888642749,"rsi_avg_gain":0.0008281878321171503,"rsi_avg_loss":0.000669028369102224,"rsi":55.32,"id":"00fce98b","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"00fce98b","last_try_trade":1606888786479,"vwap":0.6089356079910556,"ema1":0.6035974221404095,"sma2":0.6096160784313722},{"period_id":"m26781475","size":"1m","time":1606888500000,"open":0.60538,"high":0.60538,"low":0.60538,"close":0.60538,"volume":572.3,"close_time":1606888559999,"latest_trade_time":1606888544525,"rsi_avg_gain":0.0008918945884338542,"rsi_avg_loss":0.0007158767051870059,"rsi":55.47,"id":"f1494f95","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"f1494f95","last_try_trade":1606888666441,"vwap":0.6089364610266416,"ema1":0.6035347829455152,"sma2":0.6097018954248363},{"period_id":"m26781474","size":"1m","time":1606888440000,"open":0.60518,"high":0.60518,"low":0.60518,"close":0.60518,"volume":599.5,"close_time":1606888499999,"latest_trade_time":1606888493711,"rsi_avg_gain":0.0009451172490826139,"rsi_avg_loss":0.0007709441440475448,"rsi":55.07,"id":"52380e95","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"52380e95","last_try_trade":1606888546420,"vwap":0.6089373852729895,"ema1":0.6034676841435339,"sma2":0.6097721568627449},{"period_id":"m26781473","size":"1m","time":1606888380000,"open":0.60579,"high":0.60579,"low":0.60579,"close":0.60579,"volume":901.2,"close_time":1606888439999,"latest_trade_time":1606888439999,"rsi_avg_gain":0.0010178185759351227,"rsi_avg_loss":0.000783324462820433,"rsi":56.51,"id":"813895c4","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"813895c4","last_try_trade":1606888516406,"vwap":0.6089384084225066,"ema1":0.6034054181123897,"sma2":0.6098396732026142},{"period_id":"m26781472","size":"1m","time":1606888320000,"open":0.606,"high":0.60605,"low":0.60579,"close":0.60579,"volume":263,"close_time":1606888379999,"latest_trade_time":1606888362874,"last_try_trade":1606888456424,"rsi_avg_gain":0.0010961123125455168,"rsi_avg_loss":0.000843580190729697,"rsi":56.51,"id":"c1d8807d","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"c1d8807d","vwap":0.608939697723291,"ema1":0.6033187060437493,"sma2":0.6099099346405227},{"period_id":"m26781469","size":"1m","time":1606888140000,"open":0.60311,"high":0.60311,"low":0.60311,"close":0.60311,"volume":533.4,"close_time":1606888199999,"latest_trade_time":1606888156775,"rsi_avg_gain":0.0009742747981259399,"rsi_avg_loss":0.0009084709746319814,"rsi":51.75,"id":"b77384cb","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"b77384cb","last_try_trade":1606888336367,"vwap":0.6089400741830225,"ema1":0.6032288408089765,"sma2":0.6099914379084964},{"period_id":"m26781466","size":"1m","time":1606887960000,"open":0.60643,"high":0.60643,"low":0.60643,"close":0.60643,"volume":23.2,"close_time":1606888019999,"latest_trade_time":1606888009045,"rsi_avg_gain":0.0010492190133663969,"rsi_avg_loss":0.0007229687419113654,"rsi":59.2,"id":"cc4fa20c","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"cc4fa20c","last_try_trade":1606888186307,"vwap":0.6089414877822026,"ema1":0.6032331622929393,"sma2":0.6100530718954246},{"period_id":"m26781459","size":"1m","time":1606887540000,"open":0.60165,"high":0.60165,"low":0.60165,"close":0.60165,"volume":691.2,"close_time":1606887599999,"latest_trade_time":1606887575307,"rsi_avg_gain":0.0007622358605484268,"rsi_avg_loss":0.0007785817220583935,"rsi":49.47,"id":"3d7c01e3","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"3d7c01e3","last_try_trade":1606888036270,"vwap":0.6089415142685961,"ema1":0.6031169136490462,"sma2":0.6101517647058821},{"period_id":"m26781458","size":"1m","time":1606887480000,"open":0.59983,"high":0.59983,"low":0.59983,"close":0.59983,"volume":872.8,"close_time":1606887539999,"latest_trade_time":1606887507028,"rsi_avg_gain":0.0006808693882829178,"rsi_avg_loss":0.000838472623755193,"rsi":44.81,"id":"b937427c","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"b937427c","last_try_trade":1606887586164,"vwap":0.60894380598941,"ema1":0.603170255963557,"sma2":0.6102736601307187},{"period_id":"m26781451","size":"1m","time":1606887060000,"open":0.60059,"high":0.60059,"low":0.59811,"close":0.59811,"volume":889,"close_time":1606887119999,"latest_trade_time":1606887112276,"rsi_avg_gain":0.0006009362643046851,"rsi_avg_loss":0.0009029705178902079,"rsi":39.96,"id":"f7c32891","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"f7c32891","last_try_trade":1606887526141,"vwap":0.6089474244776193,"ema1":0.6032917198167772,"sma2":0.6104090196078429},{"period_id":"m26781448","size":"1m","time":1606886880000,"open":0.60097,"high":0.60097,"low":0.6,"close":0.6,"volume":812,"close_time":1606886939999,"latest_trade_time":1606886925352,"last_try_trade":1606887106081,"rsi_avg_gain":0.0006471621307896608,"rsi_avg_loss":0.0008270451731125357,"rsi":43.9,"id":"398fb170","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"398fb170","vwap":0.6089518089380554,"ema1":0.6034801459919328,"sma2":0.6105275816993462},{"period_id":"m26781447","size":"1m","time":1606886820000,"open":0.60084,"high":0.6009,"low":0.60084,"close":0.60084,"volume":967.8000000000001,"close_time":1606886879999,"latest_trade_time":1606886857130,"last_try_trade":1606886925986,"rsi_avg_gain":0.0006969438331580963,"rsi_avg_loss":0.0008260486479673413,"rsi":45.76,"id":"4609e659","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"4609e659","vwap":0.6089551180819819,"ema1":0.6036066967552758,"sma2":0.6106332026143789},{"period_id":"m26781442","size":"1m","time":1606886520000,"open":0.60325,"high":0.60325,"low":0.60325,"close":0.60325,"volume":667,"close_time":1606886579999,"latest_trade_time":1606886549980,"rsi_avg_gain":0.0007505548972471806,"rsi_avg_loss":0.0007042062362725281,"rsi":51.59,"id":"02ec2f5a","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"02ec2f5a","last_try_trade":1606886865993,"vwap":0.608958695096248,"ema1":0.603707303910013,"sma2":0.6107361437908494},{"period_id":"m26781440","size":"1m","time":1606886400000,"open":0.60385,"high":0.60385,"low":0.60385,"close":0.60385,"volume":1951.5,"close_time":1606886459999,"latest_trade_time":1606886423935,"last_try_trade":1606886565886,"rsi_avg_gain":0.0008082898893431175,"rsi_avg_loss":0.0007122221006011807,"rsi":53.16,"id":"d8174779","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"d8174779","vwap":0.6089604298380538,"ema1":0.6037239331431045,"sma2":0.6108288888888886},{"period_id":"m26781438","size":"1m","time":1606886280000,"open":0.60694,"high":0.60694,"low":0.60694,"close":0.60694,"volume":670.3,"close_time":1606886339999,"latest_trade_time":1606886307952,"last_try_trade":1606886445852,"rsi_avg_gain":0.0008704660346772035,"rsi_avg_loss":0.0005293161083397303,"rsi":62.19,"id":"1d5309af","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"1d5309af","vwap":0.6089649774609351,"ema1":0.6037193488937628,"sma2":0.6108937254901958},{"period_id":"m26781435","size":"1m","time":1606886100000,"open":0.60728,"high":0.60728,"low":0.6062,"close":0.6062,"volume":1441.1,"close_time":1606886159999,"latest_trade_time":1606886133156,"rsi_avg_gain":0.0008805018834985212,"rsi_avg_loss":0.000570032732058171,"rsi":60.7,"id":"e7035f3d","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"e7035f3d","last_try_trade":1606886325819,"vwap":0.6089655965892035,"ema1":0.6036022343080815,"sma2":0.6109531372549017},{"period_id":"m26781434","size":"1m","time":1606886040000,"open":0.6059,"high":0.60679,"low":0.6059,"close":0.60645,"volume":3598.0999999999995,"close_time":1606886099999,"latest_trade_time":1606886082681,"last_try_trade":1606886115762,"rsi_avg_gain":0.000948232797613792,"rsi_avg_loss":0.0005946506345241777,"rsi":61.46,"id":"d5fc8f53","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"d5fc8f53","vwap":0.6089674157024636,"ema1":0.6035077701011026,"sma2":0.6110109150326793},{"period_id":"m26781432","size":"1m","time":1606885920000,"open":0.6033,"high":0.6033,"low":0.60197,"close":0.60197,"volume":220.8,"close_time":1606885979999,"latest_trade_time":1606885941025,"last_try_trade":1606886085760,"rsi_avg_gain":0.0006765583974302344,"rsi_avg_loss":0.0006403929910260375,"rsi":51.37,"id":"f53dcae7","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"f53dcae7","vwap":0.6089715568316665,"ema1":0.6034007799229608,"sma2":0.6110872549019607},{"period_id":"m26781430","size":"1m","time":1606885800000,"open":0.6002,"high":0.6002,"low":0.6002,"close":0.6002,"volume":895.5,"close_time":1606885859999,"latest_trade_time":1606885800584,"rsi_avg_gain":0.000592447504924864,"rsi_avg_loss":0.0006896539903357327,"rsi":46.21,"id":"0c41485e","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"0c41485e","last_try_trade":1606885965729,"vwap":0.6089722636831022,"ema1":0.6034528082837958,"sma2":0.6111811764705881},{"period_id":"m26781429","size":"1m","time":1606885740000,"open":0.59883,"high":0.59952,"low":0.59883,"close":0.59952,"volume":1787.1999999999998,"close_time":1606885799999,"latest_trade_time":1606885787049,"last_try_trade":1606885815694,"vwap":0.6089758569508789,"ema1":0.6035710922213884,"sma2":0.6112787581699345,"rsi_avg_gain":0.0005857126976113995,"rsi_avg_loss":0.0007427042972846352,"rsi":44.09,"id":"044971ab","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"044971ab"},{"period_id":"m26781426","size":"1m","time":1606885560000,"open":0.60117,"high":0.60117,"low":0.59813,"close":0.59883,"volume":504.3,"close_time":1606885619999,"latest_trade_time":1606885619675,"rsi_avg_gain":0.0005776905974276548,"rsi_avg_loss":0.000799835397075761,"rsi":41.94,"id":"303f547b","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"303f547b","last_try_trade":1606885815691,"vwap":0.6089835933976793,"ema1":0.6037184046658025,"sma2":0.6113841176470587},{"period_id":"m26781424","size":"1m","time":1606885440000,"open":0.60192,"high":0.60192,"low":0.60192,"close":0.60192,"volume":33.9,"close_time":1606885499999,"latest_trade_time":1606885466796,"rsi_avg_gain":0.0006221283356913206,"rsi_avg_loss":0.000623668889158509,"rsi":49.94,"id":"22d7c6c2","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"22d7c6c2","last_try_trade":1606885575655,"vwap":0.6089859380394882,"ema1":0.603896164835468,"sma2":0.611473202614379},{"period_id":"m26781423","size":"1m","time":1606885380000,"open":0.60216,"high":0.60216,"low":0.60216,"close":0.60216,"volume":365.6,"close_time":1606885439999,"latest_trade_time":1606885400578,"rsi_avg_gain":0.0006699843615137299,"rsi_avg_loss":0.0006531818806322391,"rsi":50.63,"id":"fb493b21","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"fb493b21","last_try_trade":1606885485622,"vwap":0.6089860477236784,"ema1":0.6039680253749397,"sma2":0.6115683006535947},{"period_id":"m26781422","size":"1m","time":1606885320000,"open":0.60326,"high":0.6039,"low":0.60305,"close":0.60305,"volume":1803.6,"close_time":1606885379999,"latest_trade_time":1606885372443,"last_try_trade":1606885425603,"rsi_avg_gain":0.0007215216200917091,"rsi_avg_loss":0.0006349651022193385,"rsi":53.19,"id":"8051c5aa","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"8051c5aa","vwap":0.6089871906618273,"ema1":0.6040337717522102,"sma2":0.6116554248366013},{"period_id":"m26781421","size":"1m","time":1606885260000,"open":0.60333,"high":0.60395,"low":0.60333,"close":0.60395,"volume":958.1,"close_time":1606885319999,"latest_trade_time":1606885313922,"last_try_trade":1606885365578,"rsi_avg_gain":0.0007770232831756867,"rsi_avg_loss":0.0006145778023900559,"rsi":55.84,"id":"e28e8085","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"e28e8085","vwap":0.6089920989191746,"ema1":0.6040695452704724,"sma2":0.6117276470588235},{"period_id":"m26781420","size":"1m","time":1606885200000,"open":0.60313,"high":0.60313,"low":0.60295,"close":0.60295,"volume":1116.8000000000002,"close_time":1606885259999,"latest_trade_time":1606885257862,"last_try_trade":1606885335568,"rsi_avg_gain":0.0007598712280353549,"rsi_avg_loss":0.0006618530179585217,"rsi":53.45,"id":"32efdeff","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"32efdeff","vwap":0.608994314150423,"ema1":0.6040738923712169,"sma2":0.6118045098039216},{"period_id":"m26781419","size":"1m","time":1606885140000,"open":0.602,"high":0.60215,"low":0.602,"close":0.60215,"volume":9692,"close_time":1606885199999,"latest_trade_time":1606885148638,"last_try_trade":1606885275586,"rsi_avg_gain":0.0007567843994226881,"rsi_avg_loss":0.0007127647885707157,"rsi":51.5,"id":"6e23d4ae","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"6e23d4ae","vwap":0.6089974111544427,"ema1":0.6041147611847157,"sma2":0.6118916993464053},{"period_id":"m26781417","size":"1m","time":1606885020000,"open":0.60197,"high":0.602,"low":0.601,"close":0.6015,"volume":15252.8,"close_time":1606885079999,"latest_trade_time":1606885067499,"last_try_trade":1606885155539,"rsi_avg_gain":0.0007649985839936695,"rsi_avg_loss":0.0007675928492300015,"rsi":49.92,"id":"94ffe2c2","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"94ffe2c2","vwap":0.6090279951771657,"ema1":0.6041862070459781,"sma2":0.6119879738562091},{"period_id":"m26781414","size":"1m","time":1606884840000,"open":0.60294,"high":0.60294,"low":0.60294,"close":0.60294,"volume":178.7,"close_time":1606884899999,"latest_trade_time":1606884873091,"rsi_avg_gain":0.0008238446289162595,"rsi_avg_loss":0.0007158692222476943,"rsi":53.51,"id":"ed7bcca3","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"ed7bcca3","last_try_trade":1606885035522,"vwap":0.6090812853606755,"ema1":0.6042838873021955,"sma2":0.6120532026143791},{"period_id":"m26781410","size":"1m","time":1606884600000,"open":0.60306,"high":0.60306,"low":0.60306,"close":0.60306,"volume":540.8,"close_time":1606884659999,"latest_trade_time":1606884627068,"rsi_avg_gain":0.0008872172926790487,"rsi_avg_loss":0.000761705316266747,"rsi":53.81,"id":"1e980303","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"1e980303","last_try_trade":1606884885456,"vwap":0.6090817947362999,"ema1":0.6043327559313663,"sma2":0.612127320261438},{"period_id":"m26781409","size":"1m","time":1606884540000,"open":0.60217,"high":0.60217,"low":0.60217,"close":0.60217,"volume":41.8,"close_time":1606884599999,"latest_trade_time":1606884587297,"rsi_avg_gain":0.0008870032382697403,"rsi_avg_loss":0.0008202980329026506,"rsi":51.95,"id":"0ee118dc","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"0ee118dc","last_try_trade":1606884645405,"vwap":0.6090833066464568,"ema1":0.6043790379652341,"sma2":0.6121988235294119},{"period_id":"m26781408","size":"1m","time":1606884480000,"open":0.60401,"high":0.60407,"low":0.60401,"close":0.60407,"volume":2049.1,"close_time":1606884539999,"latest_trade_time":1606884517380,"rsi_avg_gain":0.0009552342565981818,"rsi_avg_loss":0.0007372440354336227,"rsi":56.44,"id":"bd21ce5c","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"bd21ce5c","last_try_trade":1606884615401,"vwap":0.6090834408098039,"ema1":0.6044593666185153,"sma2":0.6122409150326799},{"period_id":"m26781405","size":"1m","time":1606884300000,"open":0.60067,"high":0.60067,"low":0.60041,"close":0.60041,"volume":4825.2,"close_time":1606884359999,"latest_trade_time":1606884359517,"last_try_trade":1606884493939,"vwap":0.6090882148292627,"ema1":0.6044735254046432,"sma2":0.6123004575163401,"rsi_avg_gain":0.0007471753532595806,"rsi_avg_loss":0.0007939551150823629,"rsi":48.48,"id":"968ce30c","selector":"binanceus.XRP-USDT","session_id":"f0500f8a","_id":"968ce30c"},{"period_id":"m26781404","size":"1m","time":1606884240000,"open":0.60199,"high":0.60199,"low":0.60199,"close":0.60199,"volume":684.1,"close_time":1606884299999,"latest_trade_time":1606884295826,"last_try_trade":1606884493937,"vwap":0.6091077180251498,"ema1":0.604621289964812,"sma2":0.6123421568627451,"rsi_avg_gain":0.0008046503804333946,"rsi_avg_loss":0.0007334901239348504,"rsi":52.31},{"period_id":"m26781402","size":"1m","time":1606884120000,"open":0.60202,"high":0.60216,"low":0.60202,"close":0.60216,"volume":12450.1,"close_time":1606884179999,"latest_trade_time":1606884169738,"last_try_trade":1606884493936,"vwap":0.6091099866298905,"ema1":0.6047169732362597,"sma2":0.6123852941176473,"rsi_avg_gain":0.0008665465635436557,"rsi_avg_loss":0.0007768355180836848,"rsi":52.73},{"period_id":"m26781401","size":"1m","time":1606884060000,"open":0.59913,"high":0.59913,"low":0.597,"close":0.597,"volume":15390,"close_time":1606884119999,"latest_trade_time":1606884092482,"last_try_trade":1606884493934,"vwap":0.6091505357811651,"ema1":0.6048099540812146,"sma2":0.6124466666666669,"rsi_avg_gain":0.0005362809145854712,"rsi_avg_loss":0.0008365920963978145,"rsi":39.06},{"period_id":"m26781400","size":"1m","time":1606884000000,"open":0.6005,"high":0.6005,"low":0.6005,"close":0.6005,"volume":33.4,"close_time":1606884059999,"latest_trade_time":1606884013326,"last_try_trade":1606884493932,"vwap":0.6092388036307321,"ema1":0.6050939524114406,"sma2":0.6124831372549021,"rsi_avg_gain":0.0005775332926305075,"rsi_avg_loss":0.000631714565351488,"rsi":47.76},{"period_id":"m26781399","size":"1m","time":1606883940000,"open":0.60005,"high":0.60005,"low":0.60005,"close":0.60005,"volume":1976.2,"close_time":1606883999999,"latest_trade_time":1606883948347,"last_try_trade":1606884493931,"vwap":0.6092389414068019,"ema1":0.605261005226402,"sma2":0.6125197385620917,"rsi_avg_gain":0.0005873435459097725,"rsi_avg_loss":0.0006803079934554486,"rsi":46.33},{"period_id":"m26781396","size":"1m","time":1606883760000,"open":0.5986,"high":0.5986,"low":0.59858,"close":0.59858,"volume":2313.2,"close_time":1606883819999,"latest_trade_time":1606883781837,"last_try_trade":1606884493929,"vwap":0.6092475212042945,"ema1":0.6054504963255439,"sma2":0.6125628758169935,"rsi_avg_gain":0.0005194468955951418,"rsi_avg_loss":0.000732639377567406,"rsi":41.49},{"period_id":"m26781395","size":"1m","time":1606883700000,"open":0.59668,"high":0.59815,"low":0.59668,"close":0.59814,"volume":6192.999999999999,"close_time":1606883759999,"latest_trade_time":1606883716883,"last_try_trade":1606884493908,"vwap":0.6092591928547642,"ema1":0.6057003325555637,"sma2":0.6126069281045754,"rsi_avg_gain":0.0005255581952563069,"rsi_avg_loss":0.0007889962527648988,"rsi":39.98},{"period_id":"m26781394","size":"1m","time":1606883640000,"open":0.59668,"high":0.59748,"low":0.59668,"close":0.59668,"volume":64495,"close_time":1606883699999,"latest_trade_time":1606883696751,"last_try_trade":1606884493903,"vwap":0.609291859455341,"ema1":0.6059752537394023,"sma2":0.6126560784313727,"rsi_avg_gain":0.00045367805642986767,"rsi_avg_loss":0.0008496882722083526,"rsi":34.81},{"period_id":"m26781392","size":"1m","time":1606883520000,"open":0.59841,"high":0.59841,"low":0.59841,"close":0.59841,"volume":1246.8,"close_time":1606883579999,"latest_trade_time":1606883556748,"last_try_trade":1606884493901,"vwap":0.6096899021680404,"ema1":0.6063132629662896,"sma2":0.612692549019608,"rsi_avg_gain":0.0004885763684629344,"rsi_avg_loss":0.0007819719854551482,"rsi":38.45},{"period_id":"m26781391","size":"1m","time":1606883460000,"open":0.59814,"high":0.59912,"low":0.59801,"close":0.59912,"volume":7803.799999999999,"close_time":1606883519999,"latest_trade_time":1606883514134,"last_try_trade":1606884493893,"vwap":0.6096967885592468,"ema1":0.6066006543468819,"sma2":0.6127174509803923,"rsi_avg_gain":0.0005261591660370063,"rsi_avg_loss":0.000787508292028622,"rsi":40.05},{"period_id":"m26781390","size":"1m","time":1606883400000,"open":0.5968,"high":0.5968,"low":0.59668,"close":0.59668,"volume":2202,"close_time":1606883459999,"latest_trade_time":1606883408614,"last_try_trade":1606884493890,"vwap":0.6097373592317227,"ema1":0.606872678141314,"sma2":0.6127469934640525,"rsi_avg_gain":0.00037894064034754536,"rsi_avg_loss":0.0008480858529539006,"rsi":30.88},{"period_id":"m26781389","size":"1m","time":1606883340000,"open":0.5954,"high":0.59582,"low":0.5954,"close":0.59581,"volume":9023.4,"close_time":1606883399999,"latest_trade_time":1606883390756,"last_try_trade":1606884493888,"vwap":0.6097515072377363,"ema1":0.6072433209828163,"sma2":0.612789281045752,"rsi_avg_gain":0.00034116684345119984,"rsi_avg_loss":0.0009133232262580469,"rsi":27.2},{"period_id":"m26781388","size":"1m","time":1606883280000,"open":0.595,"high":0.5953,"low":0.59478,"close":0.5953,"volume":26607.799999999996,"close_time":1606883339999,"latest_trade_time":1606883319695,"last_try_trade":1606884493885,"vwap":0.6098136850033706,"ema1":0.6076590781094642,"sma2":0.6128485620915036,"rsi_avg_gain":0.0003281796775628383,"rsi_avg_loss":0.0009835788590471274,"rsi":25.02},{"period_id":"m26781387","size":"1m","time":1606883220000,"open":0.59892,"high":0.59892,"low":0.595,"close":0.59631,"volume":10682,"close_time":1606883279999,"latest_trade_time":1606883272503,"last_try_trade":1606884493881,"vwap":0.6100071004700842,"ema1":0.6081084991316266,"sma2":0.6128781045751638,"rsi_avg_gain":0.0003534242681445951,"rsi_avg_loss":0.0009815464635892176,"rsi":26.47},{"period_id":"m26781386","size":"1m","time":1606883160000,"open":0.59538,"high":0.59538,"low":0.59538,"close":0.59538,"volume":6793.6,"close_time":1606883219999,"latest_trade_time":1606883175462,"last_try_trade":1606884493861,"vwap":0.6100807746796953,"ema1":0.6085375354636857,"sma2":0.612915555555556,"rsi_avg_gain":0.0003090722887711034,"rsi_avg_loss":0.0010570500377114652,"rsi":22.62},{"period_id":"m26781385","size":"1m","time":1606883100000,"open":0.60172,"high":0.60172,"low":0.59798,"close":0.59798,"volume":85492.99999999997,"close_time":1606883159999,"latest_trade_time":1606883150809,"last_try_trade":1606884493859,"vwap":0.6101312364715543,"ema1":0.6090159912987289,"sma2":0.6129600653594774,"rsi_avg_gain":0.0003328470802150344,"rsi_avg_loss":0.0009383615790738905,"rsi":26.18},{"period_id":"m26781384","size":"1m","time":1606883040000,"open":0.60093,"high":0.60119,"low":0.60045,"close":0.60045,"volume":4393.6,"close_time":1606883099999,"latest_trade_time":1606883079798,"last_try_trade":1606884493856,"vwap":0.6106798303415475,"ema1":0.6094173000732281,"sma2":0.612988235294118,"rsi_avg_gain":0.00035845070177003706,"rsi_avg_loss":0.0008205432390026449,"rsi":30.4},{"period_id":"m26781383","size":"1m","time":1606882980000,"open":0.60262,"high":0.60262,"low":0.60048,"close":0.60048,"volume":5876.999999999999,"close_time":1606883039999,"latest_trade_time":1606883015665,"last_try_trade":1606884493854,"vwap":0.6107036205187433,"ema1":0.6097433837122546,"sma2":0.6130036601307192,"rsi_avg_gain":0.00038602383267542453,"rsi_avg_loss":0.0008813542573874657,"rsi":30.46},{"period_id":"m26781382","size":"1m","time":1606882920000,"open":0.60148,"high":0.60154,"low":0.60053,"close":0.60154,"volume":30614.200000000004,"close_time":1606882979999,"latest_trade_time":1606882943659,"last_try_trade":1606884493848,"vwap":0.6107355228357936,"ema1":0.6100802340290639,"sma2":0.6130505228758173,"rsi_avg_gain":0.0004157179736504572,"rsi_avg_loss":0.0008676122771865054,"rsi":32.39},{"period_id":"m26781381","size":"1m","time":1606882860000,"open":0.60241,"high":0.60241,"low":0.60164,"close":0.60181,"volume":14664.199999999999,"close_time":1606882919999,"latest_trade_time":1606882894589,"last_try_trade":1606884493845,"vwap":0.610887465095985,"ema1":0.6103907879937571,"sma2":0.6131055555555558,"rsi_avg_gain":0.00044769627931587705,"rsi_avg_loss":0.0009135824523546986,"rsi":32.89},{"period_id":"m26781380","size":"1m","time":1606882800000,"open":0.60333,"high":0.604,"low":0.60299,"close":0.60352,"volume":14759.599999999999,"close_time":1606882859999,"latest_trade_time":1606882855403,"last_try_trade":1606884493843,"vwap":0.6109598842110335,"ema1":0.6107028166480756,"sma2":0.6131506535947717,"rsi_avg_gain":0.0004821344546478676,"rsi_avg_loss":0.0008523195640742917,"rsi":36.13},{"period_id":"m26781379","size":"1m","time":1606882740000,"open":0.60265,"high":0.60265,"low":0.60225,"close":0.60225,"volume":59411,"close_time":1606882799999,"latest_trade_time":1606882789604,"last_try_trade":1606884493841,"vwap":0.6110201085983272,"ema1":0.6109640099807329,"sma2":0.6132152941176474,"rsi_avg_gain":0.00042152941269770405,"rsi_avg_loss":0.0009178826074646218,"rsi":31.47},{"period_id":"m26781378","size":"1m","time":1606882680000,"open":0.60353,"high":0.60353,"low":0.60266,"close":0.60266,"volume":42917.6,"close_time":1606882739999,"latest_trade_time":1606882715713,"last_try_trade":1606884493839,"vwap":0.6113154946573903,"ema1":0.6112808830709413,"sma2":0.613291895424837,"rsi_avg_gain":0.00045395475213598897,"rsi_avg_loss":0.000956950500346514,"rsi":32.17},{"period_id":"m26781377","size":"1m","time":1606882620000,"open":0.60607,"high":0.60637,"low":0.6058,"close":0.6058,"volume":6770.599999999999,"close_time":1606882679999,"latest_trade_time":1606882665807,"last_try_trade":1606884493838,"vwap":0.611531340066649,"ema1":0.6115943697280665,"sma2":0.6133366666666671,"rsi_avg_gain":0.000488874348454142,"rsi_avg_loss":0.0007890236157577819,"rsi":38.26},{"period_id":"m26781376","size":"1m","time":1606882560000,"open":0.60404,"high":0.60568,"low":0.60317,"close":0.60568,"volume":20520.2,"close_time":1606882619999,"latest_trade_time":1606882618104,"last_try_trade":1606884493835,"vwap":0.6115539766432289,"ema1":0.6118050740818144,"sma2":0.6133812418300657,"rsi_avg_gain":0.0005172492983352291,"rsi_avg_loss":0.000849717740046842,"rsi":37.84},{"period_id":"m26781375","size":"1m","time":1606882500000,"open":0.60604,"high":0.60604,"low":0.60438,"close":0.60438,"volume":31447.800000000014,"close_time":1606882559999,"latest_trade_time":1606882558630,"last_try_trade":1606884493814,"vwap":0.6116251424317403,"ema1":0.6120278040484258,"sma2":0.6134294117647062,"rsi_avg_gain":0.00045703770589948007,"rsi_avg_loss":0.0009150806431273683,"rsi":33.31},{"period_id":"m26781374","size":"1m","time":1606882440000,"open":0.60726,"high":0.60726,"low":0.60508,"close":0.60508,"volume":33192.2,"close_time":1606882499999,"latest_trade_time":1606882487004,"last_try_trade":1606884493811,"vwap":0.6117622098125954,"ema1":0.6123059060138232,"sma2":0.6134716339869286,"rsi_avg_gain":0.0004921944525071324,"rsi_avg_loss":0.0009316253079833255,"rsi":34.57},{"period_id":"m26781373","size":"1m","time":1606882380000,"open":0.60819,"high":0.60819,"low":0.60819,"close":0.60819,"volume":1045.2,"close_time":1606882439999,"latest_trade_time":1606882387772,"last_try_trade":1606884493808,"vwap":0.611898358285603,"ema1":0.6125686662325076,"sma2":0.6134834640522879,"rsi_avg_gain":0.0005300555642384503,"rsi_avg_loss":0.0007640580239820384,"rsi":40.96},{"period_id":"m26781371","size":"1m","time":1606882260000,"open":0.60896,"high":0.60896,"low":0.60896,"close":0.60896,"volume":1322.2,"close_time":1606882319999,"latest_trade_time":1606882319335,"last_try_trade":1606884493806,"vwap":0.6119007390501354,"ema1":0.6127278904591442,"sma2":0.6134762745098042,"rsi_avg_gain":0.0005708290691798696,"rsi_avg_loss":0.0007636009489037386,"rsi":42.78},{"period_id":"m26781370","size":"1m","time":1606882200000,"open":0.60963,"high":0.61,"low":0.60811,"close":0.60859,"volume":53886,"close_time":1606882259999,"latest_trade_time":1606882254127,"last_try_trade":1606884493797,"vwap":0.6119031292920055,"ema1":0.6128649046576585,"sma2":0.6134772549019611,"rsi_avg_gain":0.0005862774591167842,"rsi_avg_loss":0.0008223394834347955,"rsi":41.62},{"period_id":"m26781367","size":"1m","time":1606882020000,"open":0.61072,"high":0.61072,"low":0.61072,"close":0.61072,"volume":1982.8,"close_time":1606882079999,"latest_trade_time":1606882054768,"last_try_trade":1606884493795,"vwap":0.6120166388654031,"ema1":0.6130203557361188,"sma2":0.6134678431372553,"rsi_avg_gain":0.0006313757252026906,"rsi_avg_loss":0.0007217502129297739,"rsi":46.66},{"period_id":"m26781366","size":"1m","time":1606881960000,"open":0.61162,"high":0.61162,"low":0.61162,"close":0.61162,"volume":1981.4,"close_time":1606882019999,"latest_trade_time":1606881961500,"last_try_trade":1606884493793,"vwap":0.6120182755460524,"ema1":0.613104005035614,"sma2":0.6134728104575168,"rsi_avg_gain":0.0006799430886798208,"rsi_avg_loss":0.000708038690847448,"rsi":48.99},{"period_id":"m26781365","size":"1m","time":1606881900000,"open":0.61183,"high":0.61183,"low":0.61032,"close":0.61032,"volume":17732,"close_time":1606881959999,"latest_trade_time":1606881950945,"last_try_trade":1606884493791,"vwap":0.6120187785483272,"ema1":0.6131579688550909,"sma2":0.6134968627450985,"rsi_avg_gain":0.000632246403193647,"rsi_avg_loss":0.0007625032055280209,"rsi":45.33},{"period_id":"m26781364","size":"1m","time":1606881840000,"open":0.6136,"high":0.6136,"low":0.6136,"close":0.6136,"volume":1241.4,"close_time":1606881899999,"latest_trade_time":1606881889894,"last_try_trade":1606884493788,"vwap":0.61203819836713,"ema1":0.6132611677225487,"sma2":0.6134947058823533,"rsi_avg_gain":0.0006808807419008506,"rsi_avg_loss":0.0005688496059532486,"rsi":54.48},{"period_id":"m26781359","size":"1m","time":1606881540000,"open":0.61172,"high":0.61172,"low":0.61172,"close":0.61172,"volume":1036.8,"close_time":1606881599999,"latest_trade_time":1606881586176,"last_try_trade":1606884493786,"vwap":0.6120369474284862,"ema1":0.6132488465488232,"sma2":0.6135011111111115,"rsi_avg_gain":0.0005886407989701474,"rsi_avg_loss":0.0006126072679496524,"rsi":49},{"period_id":"m26781356","size":"1m","time":1606881360000,"open":0.60934,"high":0.60934,"low":0.60934,"close":0.60934,"volume":1238.8,"close_time":1606881419999,"latest_trade_time":1606881384880,"last_try_trade":1606884493767,"vwap":0.6120371595922616,"ema1":0.6133044409687803,"sma2":0.6135157516339873,"rsi_avg_gain":0.00045084393735246266,"rsi_avg_loss":0.0006597309039457795,"rsi":40.6},{"period_id":"m26781354","size":"1m","time":1606881240000,"open":0.60896,"high":0.60896,"low":0.60896,"close":0.60896,"volume":1167.4,"close_time":1606881299999,"latest_trade_time":1606881267917,"last_try_trade":1606884493765,"vwap":0.6120393185510368,"ema1":0.6134486024585541,"sma2":0.6134690196078436,"rsi_avg_gain":0.0004562934709949561,"rsi_avg_loss":0.0007104794350185318,"rsi":39.11},{"period_id":"m26781352","size":"1m","time":1606881120000,"open":0.61098,"high":0.61098,"low":0.61098,"close":0.61098,"volume":1980.2,"close_time":1606881179999,"latest_trade_time":1606881129489,"last_try_trade":1606884493764,"vwap":0.6120416430991349,"ema1":0.6136118243661379,"sma2":0.6134690849673208,"rsi_avg_gain":0.0004913929687637989,"rsi_avg_loss":0.0006097470838661096,"rsi":44.63}];
+var trades = [];
+
+withData(data, trades)
+  </script>
+  <pre><code>last balance: 523.50355540 (0.76%)
+buy hold: 523.60184208 (0.78%)
+vs. buy hold: -0.02%
+0 trades over 2 days (avg 0.00 trades/day)</code></pre>
+</body>
+</html>
